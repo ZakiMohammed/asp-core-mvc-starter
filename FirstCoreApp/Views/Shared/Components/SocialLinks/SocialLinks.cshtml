@@ -1,0 +1,14 @@
+﻿@model IEnumerable<SocialIcon>
+
+<div class="social-icons">
+    @foreach (var icon in Model)
+    {
+        <a style="background-color: @icon.IconBgColor;"
+           href="@icon.IconTargetUrl" 
+           title="@icon.IconName"
+           class="icon"
+           target="_blank">
+            <i class="@icon.IconClass"></i>
+        </a>
+    }
+</div>

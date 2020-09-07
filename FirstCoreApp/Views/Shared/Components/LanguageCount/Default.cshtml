@@ -1,0 +1,75 @@
+﻿@model IEnumerable<LanguageCount>
+@using Newtonsoft.Json
+@{ 
+    var items = Html.Raw(@JsonConvert.SerializeObject(@Model.Select(i => new
+    {
+        Language = i.Language.ToString(),
+        Count = i.Count
+    })));
+}
+
+<h4>Book Count by Languages</h4>
+
+<div class="row">
+    <div class="col-sm-8">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Language</th>
+                    <th style="width: 5%">Count</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Language</td>
+                        <td>@item.Count</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="col-sm-4">
+        <canvas id="langChart"></canvas>
+    </div>
+</div>
+<script src="~/lib/Chart.js/Chart.bundle.min.js"></script>
+<script>
+    const items = @items;
+    const ctx = document.getElementById('langChart');
+    const backgroundColors = [];
+
+    items.forEach(item => {
+        let color = randomColor();
+        while (backgroundColors.some(i => i === color)) {
+            color = randomColor();
+        }
+        backgroundColors.push(color);
+    });
+
+    new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: items.map(i => i.Language),
+            datasets: [{
+                data: items.map(i => i.Count),
+                backgroundColor: backgroundColors,
+                borderColor: '#333',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+
+    function randomColor() {
+        const random = () => Math.floor(Math.random() * 256);
+        return `rgba(${random()}, ${random()}, ${random()}, 0.5)`;
+    }
+</script>
+
+@section Scripts {
+    <script src="~/lib/Chart.js/Chart.bundle.min.js"></script>
+}

@@ -1,0 +1,101 @@
+﻿<!DOCTYPE html>
+
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+
+    <environment include="Development">
+        <link href="~/lib/bootswatch/sketchy/bootstrap.min.css" rel="stylesheet" />
+    </environment>
+    <environment include="Production,Staging">
+        <link href="https://stackpath.bootstrapcdn.combootswatch/4.5.2/sketchy/bootstrap.min.css" rel="stylesheet"
+              asp-fallback-href="~/lib/bootswatch/sketchy/bootstrap.min.css"
+              asp-fallback-test-class="btn"
+              asp-fallback-test-property="visibility"
+              asp-fallback-test-value="hidden" />
+    </environment>
+
+    <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
+    <link href="~/app/css/style.css" rel="stylesheet" />
+    <title>@ViewBag.Title</title>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <a class="navbar-brand" asp-controller="Home" asp-action="Index">Book Store</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Home" asp-action="Create">Create</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Home" asp-action="Contact">Contact</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                            @User.Identity.Name
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <form method="post" asp-controller="account" asp-action="Logout">
+                                <button class="dropdown-item" type="submit">Logout</button>
+                            </form>
+                        </div>
+                    </li>
+                }
+                else
+                {
+                    <li class="nav-item">
+                        <a class="nav-link"
+                           asp-controller="account" asp-action="register">
+                            Register
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link"
+                           asp-controller="account" asp-action="login">
+                            Login
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container my-5">
+        <div class="row">
+            <div class="col">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+
+    <div class="container mb-5">
+        <div class="row">
+            <div class="col">
+                @*@await Component.InvokeAsync("LanguageCount")*@
+                <vc:language-count></vc:language-count>
+                <hr class="bg-dark" />
+                @await Component.InvokeAsync("SocialLinks")
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

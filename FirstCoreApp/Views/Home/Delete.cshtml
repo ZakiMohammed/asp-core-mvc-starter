@@ -1,0 +1,17 @@
+﻿@model Book
+@{
+    ViewData["Title"] = "Delete";
+    ViewData["ShowButtons"] = false;
+}
+
+<h1>Delete Confirmation</h1>
+
+<div class="alert alert-danger" role="alert">
+    <h5>Are you sure you want to delete the following book?</h5>
+    <form method="post">
+        <button type="submit" class="btn btn-danger">Yes</button>
+        <a asp-controller="Home" asp-action="Index">No</a>
+    </form>
+</div>
+
+<partial name="_BookPartial" model="@Model" />

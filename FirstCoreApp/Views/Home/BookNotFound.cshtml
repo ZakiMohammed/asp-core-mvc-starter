@@ -1,0 +1,9 @@
+﻿@model int
+@{
+    ViewData["Title"] = "BookNotFound";
+}
+
+<h1>Book Not Found</h1>
+<p>404, book with id @Model cannot be found.</p>
+
+<a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Go Back</a>

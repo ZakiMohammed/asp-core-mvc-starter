@@ -1,0 +1,20 @@
+﻿.social-icons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+.social-icons .icon {
+    padding: 0.5rem;
+    display: inline-block;
+    text-align: center;
+    width: 50px;
+    border-radius: 255px 25px 225px 25px/25px 225px 25px 255px;
+    margin: 0 3px;
+}
+.social-icons .icon:hover {
+    opacity: 0.8;
+}
+
+.social-icons .icon i {
+    color: #fff;
+}

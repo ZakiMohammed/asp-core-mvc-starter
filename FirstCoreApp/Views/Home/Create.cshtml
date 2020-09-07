@@ -1,0 +1,47 @@
+﻿@model Book
+@inject FirstCoreApp.Data.IBookRepository repository
+@{ 
+    ViewData["Title"] = "Create";
+}
+
+<span class="float-right">Book Count: @repository.GetBooks().Count</span>
+<h1>Create Book</h1>
+<div class="clearfix"></div>
+
+@if (ViewBag.IsAdded == true)
+{
+    <div class="alert alert-info alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        Book Added Successfully
+        Click <a asp-controller="Home" asp-action="Index">here</a> to view book
+    </div>
+}
+<form asp-controller="Home" asp-action="Create" method="post">
+
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="form-group">
+        <label asp-for="Title" class="control-label">Title</label>
+        <input asp-for="Title" type="text" class="form-control" placeholder="Enter Title">
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Author" class="control-label">Author</label>
+        <input asp-for="Author" type="text" class="form-control" placeholder="Enter Author">
+        <span asp-validation-for="Author" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Description" class="control-label">Description</label>
+        <textarea asp-for="Description" class="form-control" placeholder="Enter Description"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Language" class="control-label">Language</label>
+        <select asp-for="Language" asp-items="Html.GetEnumSelectList<Language>()" class="form-control"></select>
+        <span asp-validation-for="Language" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-success">Submit</button>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Go Back</a>
+    </div>
+</form>

@@ -1,0 +1,14 @@
+﻿@model IEnumerable<Book>
+@{ 
+    ViewData["Title"] = "BookStore";
+    ViewData["ShowButtons"] = true;
+}
+
+<h1>@ViewBag.Message</h1>
+
+@foreach (var book in Model)
+{
+    <partial name="_BookPartial" model="book" />
+    @*<partial name="~/Views/Shared/_BookPartial.cshtml" model="book" />*@
+    @*@await Html.PartialAsync("_BookPartial", book)*@
+}

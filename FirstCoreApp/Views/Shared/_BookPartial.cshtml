@@ -1,0 +1,19 @@
+﻿@model Book
+@{ 
+    var showButton = (bool)ViewData["ShowButtons"];
+}
+
+<div class="card mb-4">
+    <div class="card-body">
+        <h5 class="card-title">@Model.Title</h5>
+        <h6 class="card-subtitle mb-2 text-muted">@Model.Author, @Model.Language</h6>
+    </div>
+    @if (showButton)
+    {
+        <div class="card-footer">
+            <a class="btn btn-info btn-sm" asp-controller="Home" asp-action="Details" asp-route-id="@Model.Id">View</a>
+            <a class="btn btn-warning btn-sm" asp-controller="Home" asp-action="Edit">Edit</a>
+            <a class="btn btn-danger btn-sm" asp-controller="Home" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+        </div>
+    }
+</div>
