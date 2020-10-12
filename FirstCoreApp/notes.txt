@@ -1,0 +1,369 @@
+What is .Net Core?
+	- .Net Core is open source,cross platform development platform.
+	- Works on Windows, Linux, MacOS
+	- It's a rewritten version of the traditional .Net Framework
+	- Its is lighweight in nature.
+	- It provide good performance.
+
+Types of Application:
+	- Web 
+	- IOT
+	- Cloud 
+	- Mobile
+	- more .....
+
+Language: 
+	- C#
+	- VB.Net
+	- F#
+
+Tools:
+	- .Net Core SDK
+	- Visual Studio 2017(2.1,2.2)/2019(3.0,3.1,.Net 5)
+	- Visual Studio Code 
+
+Version of .Net Core:
+	- 1.0
+	- 1.1
+	- 2.0
+	- 2.1 (LTS)
+	- 2.2
+	- 3.0
+	- 3.1 (LTS)
+
+Asp.Net Core:
+	- Cloud
+	- WPF and Windows Form 
+	- MAUI (Replacement for Xamarin) (.Net 5)
+
+------------------------------------------------------------------------------------------------------------
+
+Asp.Net Core:
+	- Asp.Net Core is a Web Development Framework which runs on .Net Core.
+	- It is open source and cross platform
+	- It has created from scratch
+	- It is lighweight and modular
+	- Unified programming for building MVC and Web API.
+	- RazorPages and Blazor.
+	- Async Programming
+	- Built-in Dependency injection
+	- It also works for Cloud Development
+	- Hosting
+		- Kestrel
+		- IIS
+		- Apache
+		- Nginx
+		- Docker 
+	
+------------------------------------------------------------------------------------------------------------
+
+Basic of Asp.Net Core MVC
+
+- CLI Command to create project
+	- dotnet new 
+
+- CLI Command to create ASP.NET MVC Web Project
+	- dotnet new web 
+	
+- Links: http://localhost/index.html	
+- UseStaticFiles()
+	
+------------------------------------------------------------------------------------------------------------
+
+ASP.NET 2.2
+	- AddMVC()
+	- AddMVCCore()
+	
+ASP.NET 3.1
+	- AddMVC()
+	- AddMVCCore()
+	
+	- AddControllers() - WebAPI
+	- AddControllersWithViews() - MVC
+	- AddRazorPages()  - Razor Pages Web Application
+	
+------------------------------------------------------------------------------------------------------------
+	
+Built in routing pattern:
+	enpoints.MapDefaultControllerRoute()
+
+Custom routing pattern:
+	enpoints.MapControllerRoute(
+		name: "default",
+		pattern: "{controller=Home}/{action=Message}/{id}"
+	)
+
+
+URL routing pattern:
+enpoints.Map("/Demo", async context => 
+{
+	await context.Response.WriteAsync("Welcome form Demo");
+})
+// localhost/Demo
+
+------------------------------------------------------------------------------------------------------------
+
+Hosting Model
+	- Types:
+		- InProcess
+			- Only 1 server will be invovled (Kestrel)
+			- Scenario where your application is hosted on Kestrel
+			- Running application from dotnet CLI
+		- OutProcess
+			- Two server will be invovled
+				- Kestrel (act as Primary Server)
+				- IIS, Nginx, Apache (act as Proxy Server)
+				- Always select this option for production because Kestrel server is not that mature (authentication/autorization etc not available in Kestrel)
+	- To know which process is uses:
+		enpoints.Map("/showprocess", async context => 
+		{
+			await context.Response.WriteAsync($"Process Name: {System.Diagnostics.Process.GetCurrentProcess().ProcessName}");
+		})
+		// Process Name: iisexpress
+		// Process Name: FirstCoreApp
+		// Select from Run options select FirstCoreApp will show Server in the Network tab
+
+------------------------------------------------------------------------------------------------------------
+
+Add Client Side Library
+	- libman.json file holds up Client Side Library
+	- app.UseStaticFiles(); used to access Client Side Library
+
+------------------------------------------------------------------------------------------------------------
+
+Views
+	- Layout
+		- Create a "Shared" folder to keep _Layout.cs.html
+	- ViewStart
+		- Specifies the layout of the page
+	- ViewImport
+		- Specifies @addTagHelper system defined or custom
+
+------------------------------------------------------------------------------------------------------------
+
+LifeTime:
+	- Singleton
+		- One object serves all the request
+		- AddSingleton()
+		- Book Count = 3
+	- Transient
+		- With every request for every controller a new object would be created
+		- AddTransient()
+		- Book Count = 2
+	- Scoped
+		- Object are same within the request but different accross the request
+		- Book Count = 3 (but when adding again still remains 3 and not added to list page too)
+
+------------------------------------------------------------------------------------------------------------
+
+Adding Dropdownlist to the View and Validation
+Custom Tag Helpers
+Manage 404 Error
+Manage Exceptions
+
+UseStatusCodePages:
+	- Return status code in case of any error, not any body
+UseStatusCodePagesWithRedirects:
+	- Return status code in case of any error, with pages ~ symbol starting, changes the URL. Example to "/CustomError/{0}"
+UseStatusCodePagesWithReExecute:
+	- Return status code in case of any error, with pages ~ symbol starting but does not change the URL
+UseExceptionHandler:
+	- Handles the exception if occurs any where in the app
+
+------------------------------------------------------------------------------------------------------------
+
+Creating reusable components in ASP.NET Core MVC
+- Partial Views
+	- Cannot be called on its own
+	- Can be rendered on other views
+	- For reusable components we can use
+	- Helps to break down larger code to smaller units
+	- Reduces duplication of code
+	- Similar to UserControls in Web Forms
+	- Code:
+		- Partial views are kept inside Shared folder
+		- Starts with an underscore
+		- Can be accessed using following ways inside a view:
+			1. Using partial tag helper (Use this by convention suggested by Microsoft)
+				<partial name="_BookPartial" model="book" />
+			2. If extenstion is provided in name attribute it will search on the directory the view is. So in case of extenstion need to provide full path
+				<partial name="~/Views/Shared/_BookPartial.cshtml" model="book" />
+			3. Using Html tag helper PartialAsync
+				@await Html.PartialAsync("_BookPartial", book)
+- View Component
+	- Similar to Partial Views but have more advantage
+	- View Component dont use model binding and only depend on data provided when calling it
+	- Works with ASP.NET Core MVC and Razor pages
+	- Steps to create View Component:
+		- Create ViewComponent Class:
+			- Create a folder "ViewComponents"
+			- Create a class which inherits ViewComponent
+			- Name it as <YOUR_CLASS_NAME>ViewComponent as per convention. Example:
+				public class SocialLinksViewComponent : ViewComponent { }
+			- Define InvokeAsync method as follows:
+				public async Task<IViewComponentResult> InvokeAsync()
+				{
+					return await Task.FromResult(View("YOUR_VIEW_NAME_CSHTML", DATA));
+				}
+				public IViewComponentResult Invoke()
+				{
+					return View(DATA);
+				}
+				
+				// example async
+				public async Task<IViewComponentResult> InvokeAsync()
+				{
+					return await Task.FromResult(View("SocialLinks", socialIcons));
+				}
+				// example
+				public IViewComponentResult Invoke()
+				{
+					var result = repository.BookCountByLanguage();
+					return View(result);
+				}
+		- Create ViewComponent View:
+			- Create a "Components" folder inside Shared folder
+			- Create an Empty View inside the folder with same name provided inside InvokeAsync method. Example:
+				Shared > Components > SocialLinks > SocialLinks.cshtml
+			- Optionally can give the view name as Default
+				Shared > Components > SocialLinks > Default.cshtml
+		- Access ViewComponent:
+			- Can be accessed anywhere as follows:
+				@await Component.InvokeAsync("SocialLinks")
+	
+------------------------------------------------------------------------------------------------------------
+
+Environment Tag
+	- We can write code for different environment using <environment> tag
+	- Example:
+		<environment include="Development">
+			<link href="~/lib/bootswatch/sketchy/bootstrap.min.css" rel="stylesheet" />
+		</environment>
+		<environment include="Production,Staging">
+			<link 
+				  href="https://stackpath.bootstrapcdn.combootswatch/4.5.2/sketchy/bootstrap.min.css" rel="stylesheet"
+				  asp-fallback-href="~/lib/bootswatch/sketchy/bootstrap.min.css"
+				  asp-fallback-test-class="btn"
+				  asp-fallback-test-property="visibility"
+				  asp-fallback-test-value="hidden"/>
+		</environment>
+
+------------------------------------------------------------------------------------------------------------
+
+Entity Framework Core:
+	- Light weight, extensible, open source and cross platform
+	- Supports multiple DBs
+	- Concept:
+		- Model - Entity
+		- DbContext - a live session to the DB to perform DB operations
+	- Only one approach which is Code First Approach
+	- Approaches:
+		- Code First
+		- Reverse Engineering (DB first approach)
+	- Steps:
+		1. Add Nuget Packages:
+			Microsoft.EntityFrameworkCore
+			Microsoft.EntityFrameworkCore.Tools
+			Microsoft.EntityFrameworkCore.Design
+			Microsoft.EntityFrameworkCore.SqlServer
+		2. Create DbContext
+		3. Create a repository class implmenting EF
+		4. Add service to Startup.cs
+		5. Add connectionString to app.settings
+		6. Create IConfiguration object in Startup.cs
+		7. AddDbContext inside ConfigureServices and UseSqlServer
+		8. Make AddSingleton to AddTransient
+		8. Go to Package Manager Console and run following command
+			- add-migration InitialDbCreation
+			- update-database
+
+------------------------------------------------------------------------------------------------------------
+
+ASP.NET Core Identity
+
+Steps to get started with:
+	1. Install Nuget Package:
+		Microsoft.AspNetCore.Identity.EntityFrameworkCore
+	2. Inherit BookContext from IdentityDbContext class
+		public class BookContext : IdentityDbContext
+	3. Add following to Startup.cs
+		public void ConfigureServices(IServiceCollection services)
+        {
+			// after AddDbContext
+			services.AddIdentity<IdentityUser, IdentityRole>()
+					.AddEntityFrameworkStores<BookContext>();
+		}
+		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+			// add after app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+			
+			// add before app.UseEndpoints(...);
+		}
+	4. Create Login and Register models
+	5. Create AccountController
+	6. Create Views for Login and Register
+	7. Add links:
+		- Using:
+			- @using Microsoft.AspNetCore.Identity
+			- @inject SignInManager<IdentityUser> SignInManager
+		- Methods:
+			- SignInManager.IsSignedIn(User)
+			- @User.Identity.Name
+		- HTML:
+			<ul class="navbar-nav ml-auto">
+				@if (SignInManager.IsSignedIn(User))
+				{
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+							@User.Identity.Name
+						</a>
+						<div class="dropdown-menu dropdown-menu-right">
+							<form method="post" asp-controller="account" asp-action="Logout">
+								<button class="dropdown-item" type="submit">Logout</button>
+							</form>
+						</div>
+					</li>
+				}
+				else
+				{
+					<li class="nav-item">
+						<a class="nav-link"
+						   asp-controller="account" asp-action="register">
+							Register
+						</a>
+					</li>
+					<li>
+						<a class="nav-link"
+						   asp-controller="account" asp-action="login">
+							Login
+						</a>
+					</li>
+				}
+			</ul>
+	8. Place [Authorized] attribute on the Home Controller and [AllowAnonymus] on Index
+	9. Go to Package Manager Console and run following command
+			- add-migration CreateIdentityScehma
+			- update-database
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
